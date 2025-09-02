@@ -1,5 +1,19 @@
 # Visual Studio 2015 user specific files
+.vscode/
+.idea/
 .vs/
+*.code-workspace
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.VC.db
+
+# Ignore macOS files
+.DS_Store
+
+# Ignore Windows thumbnail cache files
+Thumbs.db
 
 # Compiled Object files
 *.slo
@@ -47,18 +61,15 @@ SourceArt/**/*.tga
 
 # Binary Files
 Binaries/*
-Plugins/**/Binaries/*
+Plugins/*/Binaries/*
 
 # Builds
 Build/*
 
-# Whitelist PakBlacklist-<BuildConfiguration>.txt files
-!Build/*/
-Build/*/**
-!Build/*/PakBlacklist*.txt
-
-# Don't ignore icon files in Build
-!Build/**/*.ico
+# Ignore build and binary directories
+DerivedDataCache/
+Intermediate/
+Saved/
 
 # Built data for maps
 *_BuiltData.uasset
@@ -68,7 +79,16 @@ Saved/*
 
 # Compiled source files for the engine to use
 Intermediate/*
-Plugins/**/Intermediate/*
+Plugins/*/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+# Unreal Engine project specific ignores
+# Whitelist PakBlacklist-<BuildConfiguration>.txt files
+!Build/*/
+Build/*/**
+!Build/*/PakBlacklist*.txt
+
+# Don't ignore icon files in Build
+!Build/**/*.ico
