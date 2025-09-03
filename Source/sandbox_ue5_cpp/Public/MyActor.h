@@ -1,5 +1,4 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -15,6 +14,18 @@ public:
 	AMyActor();
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPrintHelloDelegate);
+
+	UPROPERTY(BlueprintAssignable, Category = "Delegates")
+	FOnPrintHelloDelegate OnPrintHello;
+
+	void SetupInput();
+
+	void PressedH();
+
+	UFUNCTION()
+	void PrintHello();
 
 protected:
 
