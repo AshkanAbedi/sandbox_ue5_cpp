@@ -7,7 +7,7 @@
 AMyActor::AMyActor()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	OnPrintHello.AddDynamic(this, &AMyActor::PrintHello);
+	OnPrintStruct.AddDynamic(this, &AMyActor::PrintStruct);
 }
 
 void AMyActor::BeginPlay()
@@ -19,7 +19,6 @@ void AMyActor::BeginPlay()
 void AMyActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void AMyActor::SetupInput()
@@ -31,11 +30,16 @@ void AMyActor::SetupInput()
 
 void AMyActor::PressedH()
 {
-	OnPrintHello.Broadcast();
+	OnPrintStruct.Broadcast(MyStruct, 5.0f);
 }
 
 void AMyActor::PrintHello()
 {
 	UKismetSystemLibrary::PrintString(this, TEXT("Hello World!"), true, true, FColor::Red, 5, TEXT("None"));
+}
+
+void AMyActor::PrintStruct(const FTestStruct& TestStruct, const float PrintDuration)
+{
+	UKismetSystemLibrary::PrintString(this, FString::Printf(TEXT("CalcType: %d, NumA: %d, NumB: %d"), static_cast<int32>(TestStruct.CalcType), TestStruct.NumA, TestStruct.NumB), true, true, FColor::Green, PrintDuration, TEXT("None"));
 }
 

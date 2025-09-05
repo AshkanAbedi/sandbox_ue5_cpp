@@ -14,6 +14,16 @@ enum class ECalcType : uint8
 	Divide UMETA(DisplayName = "Divide")
 };
 
+USTRUCT(BlueprintType)
+struct FTestStruct
+{
+	GENERATED_BODY()
+	
+	ECalcType CalcType;
+	int32 NumA;
+	int32 NumB;
+};
+
 UCLASS()
 class SANDBOX_UE5_CPP_API AMyActor : public AActor
 {
@@ -24,13 +34,13 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPrintHelloDelegate);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPrintStructDelegate, const FTestStruct&, TestStruct, const float, PrintDuration);
 
 	UPROPERTY(BlueprintAssignable, Category = "Delegates")
-	FOnPrintHelloDelegate OnPrintHello;
+	FOnPrintStructDelegate OnPrintStruct;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Calculation")
-	ECalcType CalcType;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Struct")
+	FTestStruct MyStruct;
 
 	void SetupInput();
 
@@ -38,6 +48,9 @@ public:
 
 	UFUNCTION()
 	void PrintHello();
+
+	UFUNCTION()
+	void PrintStruct(const FTestStruct& TestStruct, const float PrintDuration);
 
 protected:
 
