@@ -1,4 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
+// ReSharper disable CppMemberFunctionMayBeConst
+
 #include "MyActor.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/GameplayStatics.h"
@@ -6,7 +8,7 @@
 // Sets default values
 AMyActor::AMyActor()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	OnPrintStruct.AddDynamic(this, &AMyActor::PrintStruct);
 }
 
@@ -14,11 +16,6 @@ void AMyActor::BeginPlay()
 {
 	Super::BeginPlay();
 	SetupInput();
-}
-
-void AMyActor::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 }
 
 void AMyActor::SetupInput()

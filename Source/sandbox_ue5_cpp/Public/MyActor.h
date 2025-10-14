@@ -19,8 +19,13 @@ struct FTestStruct
 {
 	GENERATED_BODY()
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	ECalcType CalcType;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 NumA;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 NumB;
 };
 
@@ -32,7 +37,6 @@ class SANDBOX_UE5_CPP_API AMyActor : public AActor
 public:	
 	AMyActor();
 	virtual void BeginPlay() override;
-	virtual void Tick(float DeltaTime) override;
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPrintStructDelegate, const FTestStruct&, TestStruct, const float, PrintDuration);
 

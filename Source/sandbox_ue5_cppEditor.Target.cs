@@ -11,5 +11,11 @@ public class sandbox_ue5_cppEditorTarget : TargetRules
 		DefaultBuildSettings = BuildSettingsVersion.V5;
 
 		ExtraModuleNames.AddRange( new string[] { "sandbox_ue5_cpp" } );
+		RegisterModulesCreatedByRider();
+	}
+
+	private void RegisterModulesCreatedByRider()
+	{
+		ExtraModuleNames.AddRange(new string[] { "PlayerCharacter" });
 	}
 }
