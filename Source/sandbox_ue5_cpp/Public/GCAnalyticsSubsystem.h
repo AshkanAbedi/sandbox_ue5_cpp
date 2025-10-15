@@ -6,7 +6,7 @@
 #include "GCAnalyticsSubsystem.generated.h"
 
 UCLASS()
-class SANDBOX_UE5_CPP_API UGCAnalyticsSubsystem : public UWorldSubsystem
+class SANDBOX_UE5_CPP_API UGCAnalyticsSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 
@@ -15,6 +15,11 @@ public:
 	virtual void Deinitialize() override;
 
 private:
+	void OnPreGarbageCollect();
 	void OnPostGarbageCollect();
-	FDelegateHandle GCDelegateHandle;
+
+	int32 ObjCountPreGC;
+	FDelegateHandle PreGCDelegateHandle;
+	FDelegateHandle PostGCDelegateHandle;
+	
 };
