@@ -3,7 +3,7 @@
 #include "EngineUtils.h"
 #include "Engine/Engine.h"
 #include "UObject/UObjectGlobals.h"
-#include "ProfilingDebugging/ResourceSize.h"
+#include "Serialization/ArchiveCountMem.h"
 
 void UGCAnalyticsSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
@@ -21,12 +21,10 @@ void UGCAnalyticsSubsystem::Deinitialize()
 
 void UGCAnalyticsSubsystem::OnPreGarbageCollect()
 {
-	int32 ActorCount = 0;
-	TArray<FString> AliveActorNames;
 	const UWorld* World = GetWorld();
-	FResourceSizeEx Size(EResourceSizeMode::EstimatedTotal);
+	TArray<FString> AliveActorNames;
 
-	if (!World)
+	if (!World && !GEngine)
 	{
 		return;
 	}
@@ -35,56 +33,81 @@ void UGCAnalyticsSubsystem::OnPreGarbageCollect()
 	{
 		if (AActor* Actor = *It; IsValid(Actor))
 		{
-			++ActorCount;
-			Actor->GetResourceSizeEx(Size);
-			const double MemKB = static_cast<double>(Size.GetTotalMemoryBytes()) / 1024.0;
-			FString MemSize;
+			++ObjCountPreGC;
+			FArchiveCountMem ActorMemory(Actor, false);
+			SIZE_T TotalMemoryBytes = ActorMemory.GetMax();
+			TArray<UActorComponent*> Components;
+			Actor->GetComponents(Components);
+			for (const auto Component : Components)
+			{
+				if (IsValid(Component))
+				{
+					FArchiveCountMem ComponentMemory(Component, false);
+					TotalMemoryBytes += ComponentMemory.GetMax();
+				}
+			}
+			float MemKB = TotalMemoryBytes / 1024.0f;
+			FString MemSizeString;
 			if (MemKB >= 1000.0)
 			{
 				const double MemMB = MemKB / 1024.0;
-				MemSize = FString::Printf(TEXT(" Size: %.2f MB"), MemMB);
+				MemSizeString = FString::Printf(TEXT(" Size: %.2f MB"), MemMB);
 			} else
 			{
-				MemSize = FString::Printf(TEXT(" Size: %.2f KB"), MemKB);
+				MemSizeString = FString::Printf(TEXT(" Size: %.2f KB"), MemKB);
 			}
-			const FString ActorName = FString::Printf(TEXT("%s%s"), *Actor->GetName(), *MemSize);
+			const FString ActorName = FString::Printf(TEXT("%s%s"), *Actor->GetName(), *MemSizeString);
 			AliveActorNames.Add(ActorName);
 		}
 	}
 
-	if (GEngine)
+	for (const FString& Name : AliveActorNames)
 	{
-		for (const FString& Name : AliveActorNames)
-		{
-			GEngine->AddOnScreenDebugMessage(
-				-1,
-				10.0f,
-				FColor::Purple,
-				Name
-			);
-		}
+		GEngine->AddOnScreenDebugMessage
+		(
+			-1,
+			10.0f,
+			FColor::Purple,
+			Name
+		);
 	}
+
+	GEngine->AddOnScreenDebugMessage
+	(
+		-1,
+		10.0f,
+		FColor::Green,
+		FString::Printf(TEXT("Total actors alive on memory: %d"), ObjCountPreGC)
+	);
+	
 }
 
 void UGCAnalyticsSubsystem::OnPostGarbageCollect()
 {
+	const UWorld* World = GetWorld();
 
-	int32 CountAfter = 0;
-	for (TObjectIterator<UObject> It; It; ++It)
+	if (!World && !GEngine)
 	{
-		if (!It->IsGarbageEliminationEnabled())
+		return;
+	}
+	
+	for (TActorIterator<AActor> It(World); It; ++It)
+	{
+		if (IsValid(*It))
 		{
-			++CountAfter;
+			++ObjCountPostGC;
 		}
 	}
-	int32 ObjectsGarbageCollected = ObjCountPreGC - CountAfter;
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(
-			12345, // Unique key to overwrite message
-			5.f,   // Duration in seconds
-			FColor::Green,
-			FString::Printf(TEXT("GC Cycle Ended. Objects after GC: %d. Objects collected: %d"), CountAfter, ObjectsGarbageCollected)
-		);
-	}
+	const int32 ObjectsGarbageCollected = ObjCountPostGC - ObjCountPreGC;
+	
+	GEngine->AddOnScreenDebugMessage
+	(
+		12345, // Unique key to overwrite message
+		5.f,   // Duration in seconds
+		FColor::Green,
+		FString::Printf(TEXT("GC Cycle Ended. Objects collected: %d"), ObjectsGarbageCollected)
+	);
+
+	ObjCountPreGC = 0;
+	ObjCountPostGC = 0;
 }

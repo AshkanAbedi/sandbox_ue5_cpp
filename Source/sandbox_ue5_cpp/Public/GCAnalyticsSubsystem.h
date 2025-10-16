@@ -19,6 +19,7 @@ private:
 	void OnPostGarbageCollect();
 
 	int32 ObjCountPreGC;
+	int32 ObjCountPostGC;
 	FDelegateHandle PreGCDelegateHandle;
 	FDelegateHandle PostGCDelegateHandle;
 	
