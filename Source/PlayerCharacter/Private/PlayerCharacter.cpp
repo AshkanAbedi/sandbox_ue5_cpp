@@ -19,25 +19,26 @@ APlayerCharacter::APlayerCharacter()
 
 	GetMesh()->SetWorldRotation(FRotator(0.f, -90.f, 0.f));
 	GetMesh()->SetWorldLocation(FVector(0.f, 0.f, -90.f));
-
+	
+	bUseControllerRotationYaw = true;
 	bUseControllerRotationPitch = false;
-	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
 
-	GetCharacterMovement()->bOrientRotationToMovement = false;
-	//GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f);
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 100.0f, 0.0f);
 	
 	GetCharacterMovement()->MaxWalkSpeed = 180.f;
 	GetCharacterMovement()->MaxAcceleration = 400.f;
-	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
+	GetCharacterMovement()->MinAnalogWalkSpeed = 30.f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 300.f;
-	
 	
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->SetWorldLocation(FVector(0, 40, 80));
 	CameraBoom->TargetArmLength = 130.0f;
 	CameraBoom->bUsePawnControlRotation = true;
+	CameraBoom->bEnableCameraLag = true;
+	CameraBoom->bEnableCameraRotationLag = true;
 
 	BaseCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("BaseCamera"));
 	BaseCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
@@ -47,6 +48,7 @@ APlayerCharacter::APlayerCharacter()
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	PlayerMovementState = Idle;
 }
 
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -71,9 +73,9 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 void APlayerCharacter::Move(const FInputActionValue& Value)
 {
 	const FVector2D MoveVector = Value.Get<FVector2D>();
-	bIsMovingForward = true;
 	if (GetController() != nullptr)
 	{
+		PlayerMovementState = Walking;
 		const FVector Forward = GetActorForwardVector();
 		const FVector Right = GetActorRightVector();
 		AddMovementInput(Forward, MoveVector.Y);
@@ -84,12 +86,18 @@ void APlayerCharacter::Move(const FInputActionValue& Value)
 
 void APlayerCharacter::Look(const FInputActionValue& Value)
 {
-	
+	if (Controller != nullptr)
+	{
+		const FVector2D LookVector = Value.Get<FVector2D>();
+		AddControllerYawInput(LookVector.X);
+		AddControllerPitchInput(LookVector.Y * -1.f);
+	}
 }
 
 void APlayerCharacter::StopMove()
 {
-	bIsMovingForward = false;
+	PlayerMovementState = Idle;
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Stop Move"));
 }
 
 void APlayerCharacter::Tick(float DeltaSeconds)

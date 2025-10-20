@@ -12,6 +12,14 @@ class UCameraComponent;
 class UInputAction;
 struct FInputActionValue;
 
+UENUM(BlueprintType)
+enum EMovementStates
+{
+	Idle,
+	Walking,
+	Running,
+	Teleporting,
+};
 
 UCLASS(Blueprintable, BlueprintType)
 class PLAYERCHARACTER_API APlayerCharacter : public ACharacter
@@ -25,7 +33,7 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UCameraComponent> BaseCamera;
 
-	bool bIsMovingForward;
+	EMovementStates PlayerMovementState;
 
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
