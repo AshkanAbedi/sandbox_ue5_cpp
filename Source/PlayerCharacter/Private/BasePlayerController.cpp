@@ -21,6 +21,7 @@ void ABasePlayerController::SetupInputComponent()
 		for (UInputMappingContext* CurrentContext : DefaultMappingContext)
 		{
 			Subsystem->AddMappingContext(CurrentContext, 0);
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Added Mapping Context: %s"), *CurrentContext->GetName()));
 		}
 	}
 }

@@ -8,8 +8,8 @@
 void UGCAnalyticsSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-	PreGCDelegateHandle = FCoreUObjectDelegates::GetPreGarbageCollectDelegate().AddUObject(this, &UGCAnalyticsSubsystem::OnPreGarbageCollect);
-	PostGCDelegateHandle = FCoreUObjectDelegates::GetPostPurgeGarbageDelegate().AddUObject(this, &UGCAnalyticsSubsystem::OnPostGarbageCollect);
+	//PreGCDelegateHandle = FCoreUObjectDelegates::GetPreGarbageCollectDelegate().AddUObject(this, &UGCAnalyticsSubsystem::OnPreGarbageCollect);
+	//PostGCDelegateHandle = FCoreUObjectDelegates::GetPostPurgeGarbageDelegate().AddUObject(this, &UGCAnalyticsSubsystem::OnPostGarbageCollect);
 }
 
 void UGCAnalyticsSubsystem::Deinitialize()
@@ -23,7 +23,7 @@ void UGCAnalyticsSubsystem::OnPreGarbageCollect()
 {
 	const UWorld* World = GetWorld();
 	TArray<FString> AliveActorNames;
-
+	
 	if (!World && !GEngine)
 	{
 		return;
