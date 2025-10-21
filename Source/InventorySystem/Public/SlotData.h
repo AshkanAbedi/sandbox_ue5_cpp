@@ -5,19 +5,19 @@
 class UBaseItemData;
 
 USTRUCT(BlueprintType)
-struct FInventorySlot
+struct FSlotData
 {
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Slot")
-	TObjectPtr<UBaseItemData> ItemData;
+	TObjectPtr<UBaseItemData> ItemData = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Slot")
-	int32 Quantity;
+	int32 Quantity = 0;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Inventory Slot")
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Inventory Slot")
 	bool bIsRootSlot;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Inventory Slot")
-	FIntPoint RootSlotCoordinate;
+	FIntPoint RootSlotCoordinate;*/
 }; 

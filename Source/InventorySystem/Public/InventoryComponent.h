@@ -3,8 +3,10 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "InventorySlot.h"
 #include "InventoryComponent.generated.h"
+
+struct FSlotData;
+class UBaseItemData;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryUpdated);
 
@@ -17,19 +19,37 @@ public:
 	UInventoryComponent();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Inventory Grid", meta = (ClampMin = 1, UIMin = 1))
-	int32 GridWidth = 6;
+	int32 GridRows = 6;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Inventory Grid", meta = (ClampMin = 1, UIMin = 1))
-	int32 GridHeight = 2;
+	int32 GridColumns = 2;
 
 	UPROPERTY(BlueprintAssignable, Category = "Inventory")
 	FOnInventoryUpdated OnInventoryUpdated;
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	bool TryAddItem(UBaseItemData* ItemData, int32 Quantity = 1);
+
+	UFUNCTION(BlueprintCallable, Category="Inventory")
+	int32 GetCapacity() const { return GridRows * GridColumns; }
+
+	UFUNCTION(BlueprintCallable, Category="Inventory")
+	const TArray<FSlotData>& GetSlots() const { return InventoryGrid; }
 
 protected:
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 							   FActorComponentTickFunction* ThisTickFunction) override;
 
-public:
+private:
+	UPROPERTY(VisibleAnywhere, Category = "Inventory")
+	TArray<FSlotData> InventoryGrid;
+	
+	void InitializeGrid();
+	
+	int32 TryStackItem(UBaseItemData* ItemData, int32 Quantity);
+	int32 FindFirstEmptySlot() const;
+	int32 CountEmptySlots() const;
+	void PlaceItemAt(UBaseItemData* ItemData, int32 Quantity, int32 SlotId);
 	
 };

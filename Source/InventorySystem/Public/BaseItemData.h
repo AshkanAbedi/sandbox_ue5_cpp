@@ -3,7 +3,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
-#include "InventroySystemTypes.h"
+#include "ItemTypes.h"
 #include "BaseItemData.generated.h"
 
 UCLASS(BlueprintType)
@@ -27,8 +27,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Data")
 	TSoftObjectPtr<UStaticMesh> WorldMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Data", meta = (ClampMin = 1, UIMin = 1))
-	FIntPoint Dimensions = FIntPoint(1,1);
+	/*UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Data", meta = (ClampMin = 1, UIMin = 1))
+	FIntPoint Dimensions = FIntPoint(1,1);*/
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Stacking")
 	bool bIsStackable = false;
