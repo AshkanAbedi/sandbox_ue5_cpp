@@ -16,6 +16,6 @@ public class sandbox_ue5_cppEditorTarget : TargetRules
 
 	private void RegisterModulesCreatedByRider()
 	{
-		ExtraModuleNames.AddRange(new string[] { "PlayerCharacter" });
+		ExtraModuleNames.AddRange(new string[] { "PlayerCharacter", "InventorySystem" });
 	}
 }
