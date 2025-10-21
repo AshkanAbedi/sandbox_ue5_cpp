@@ -13,12 +13,12 @@ class UInputAction;
 struct FInputActionValue;
 
 UENUM(BlueprintType)
-enum EMovementStates
+enum class EMovementStates : uint8
 {
-	Idle,
-	Walking,
-	Running,
-	Teleporting,
+	Ems_Idle UMETA(DisplayName = "Idle"),
+	Ems_Walking UMETA(DisplayName = "Walking"),
+	Ems_Running UMETA(DisplayName = "Running"),
+	Ems_Teleporting UMETA(DisplayName = "Teleporting"), 
 };
 
 UCLASS(Blueprintable, BlueprintType)
@@ -30,8 +30,11 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USpringArmComponent> CameraBoom;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UCameraComponent> BaseCamera;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UCameraComponent> AimCamera;
 
 	EMovementStates PlayerMovementState;
 
@@ -39,8 +42,11 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UInputAction> MoveInput;
 
-	UPROPERTY(EditAnywhere, Category = "Input")
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UInputAction> LookInput;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UInputAction> AimInput;
 	
 	APlayerCharacter();
 	 
@@ -53,6 +59,7 @@ protected:
 	virtual void Tick(float DeltaSeconds) override;
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
+	void Aim();
 	void StopMove();
 	
 };

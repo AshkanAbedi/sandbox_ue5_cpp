@@ -7,6 +7,7 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 DEFINE_LOG_CATEGORY(LogPlayerCharacter);
 
@@ -34,7 +35,7 @@ APlayerCharacter::APlayerCharacter()
 	
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->SetWorldLocation(FVector(0, 40, 80));
+	CameraBoom->SetWorldLocation(FVector(0, 40, 70));
 	CameraBoom->TargetArmLength = 130.0f;
 	CameraBoom->bUsePawnControlRotation = true;
 	CameraBoom->bEnableCameraLag = true;
@@ -43,12 +44,17 @@ APlayerCharacter::APlayerCharacter()
 	BaseCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("BaseCamera"));
 	BaseCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	BaseCamera->bUsePawnControlRotation = false;
+
+	AimCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("AimCamera"));
+	AimCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
+	AimCamera->bUsePawnControlRotation = false;
+	AimCamera->SetRelativeLocation(FVector(50, 0, 0));
 }
 
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	PlayerMovementState = Idle;
+	PlayerMovementState = EMovementStates::Ems_Idle;
 }
 
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -61,6 +67,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		{
 			EnhancedInputComponent->BindAction(MoveInput, ETriggerEvent::Triggered, this, &APlayerCharacter::Move);
 			EnhancedInputComponent->BindAction(LookInput, ETriggerEvent::Triggered, this, &APlayerCharacter::Look);
+			EnhancedInputComponent->BindAction(AimInput, ETriggerEvent::Started, this, &APlayerCharacter::Aim);
 			EnhancedInputComponent->BindAction(MoveInput, ETriggerEvent::Completed, this, &APlayerCharacter::StopMove);
 		}
 	}
@@ -75,7 +82,7 @@ void APlayerCharacter::Move(const FInputActionValue& Value)
 	const FVector2D MoveVector = Value.Get<FVector2D>();
 	if (GetController() != nullptr)
 	{
-		PlayerMovementState = Walking;
+		PlayerMovementState = EMovementStates::Ems_Walking;
 		const FVector Forward = GetActorForwardVector();
 		const FVector Right = GetActorRightVector();
 		AddMovementInput(Forward, MoveVector.Y);
@@ -94,9 +101,17 @@ void APlayerCharacter::Look(const FInputActionValue& Value)
 	}
 }
 
+void APlayerCharacter::Aim()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Aim"));
+	APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
+	BaseCamera->SetActive(false);
+	AimCamera->SetActive(true);
+}
+
 void APlayerCharacter::StopMove()
 {
-	PlayerMovementState = Idle;
+	PlayerMovementState = EMovementStates::Ems_Idle;
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Stop Move"));
 }
 
