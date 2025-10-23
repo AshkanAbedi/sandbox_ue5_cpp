@@ -1,8 +1,10 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
-#include "Widgets/SCompoundWidget.h"
 #include "SlotData.h"
+#include "Widgets/SCompoundWidget.h"
+
+struct FSlotData;
 
 class SInventorySlot : public SCompoundWidget
 {
@@ -14,7 +16,6 @@ public:
 	
 protected:
 private:
-
 	FSlateBrush EmptyBrush;
 	FSlotData SlotData;
 
