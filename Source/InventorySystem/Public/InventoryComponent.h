@@ -6,7 +6,7 @@
 #include "InventoryComponent.generated.h"
 
 struct FSlotData;
-class UBaseItemData;
+class UItemData;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryUpdated);
 
@@ -28,7 +28,10 @@ public:
 	FOnInventoryUpdated OnInventoryUpdated;
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	bool TryAddItem(UBaseItemData* ItemData, int32 Quantity = 1);
+	bool AddItem(UItemData* ItemData, int32 Quantity = 1);
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	bool UseItem(int32 SlotIndex);
 
 	UFUNCTION(BlueprintCallable, Category="Inventory")
 	int32 GetCapacity() const { return GridRows * GridColumns; }
@@ -46,10 +49,8 @@ private:
 	TArray<FSlotData> InventoryGrid;
 	
 	void InitializeGrid();
-
 	int32 CountEmptySlots() const;
 	int32 FindFirstEmptySlot() const;
-	void TryStackItem(UBaseItemData* ItemData, int32 Quantity);
-	void PlaceItemAt(UBaseItemData* ItemData, int32 Quantity, int32 SlotId);
-	
+	int32 StackIntoExisting(UItemData* ItemData, int32 Quantity);
+	int32 FillEmptySlots(UItemData* ItemData, int32 Quantity);
 };

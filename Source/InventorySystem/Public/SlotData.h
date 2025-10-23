@@ -1,16 +1,17 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
+#include "SlotData.generated.h"
 
-class UBaseItemData;
+class UItemData;
 
 USTRUCT(BlueprintType)
 struct FSlotData
 {
 	GENERATED_BODY()
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Slot")
-	TObjectPtr<UBaseItemData> ItemData = nullptr;
+	TObjectPtr<UItemData> ItemData = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory Slot")
 	int32 Quantity = 0;

@@ -4,10 +4,10 @@
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
 #include "ItemTypes.h"
-#include "BaseItemData.generated.h"
+#include "ItemData.generated.h"
 
 UCLASS(BlueprintType)
-class INVENTORYSYSTEM_API UBaseItemData : public UPrimaryDataAsset
+class INVENTORYSYSTEM_API UItemData : public UPrimaryDataAsset
 {
 	GENERATED_BODY()
 
