@@ -46,10 +46,10 @@ private:
 	TArray<FSlotData> InventoryGrid;
 	
 	void InitializeGrid();
-	
-	int32 TryStackItem(UBaseItemData* ItemData, int32 Quantity);
-	int32 FindFirstEmptySlot() const;
+
 	int32 CountEmptySlots() const;
+	int32 FindFirstEmptySlot() const;
+	void TryStackItem(UBaseItemData* ItemData, int32 Quantity);
 	void PlaceItemAt(UBaseItemData* ItemData, int32 Quantity, int32 SlotId);
 	
 };
