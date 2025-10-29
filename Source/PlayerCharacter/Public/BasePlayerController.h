@@ -8,7 +8,7 @@
 DECLARE_LOG_CATEGORY_EXTERN(LogBasePlayerController, Log, All);
 
 class UInputMappingContext;
-class UInventorySlotWidget;
+class UInventoryWidget;
 
 UCLASS(Abstract)
 class PLAYERCHARACTER_API ABasePlayerController : public APlayerController
@@ -17,10 +17,10 @@ class PLAYERCHARACTER_API ABasePlayerController : public APlayerController
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	TSubclassOf<UInventorySlotWidget> InventorySlotClass;
+	TSubclassOf<UInventoryWidget> InventoryWidgetClass;
 
 	UPROPERTY()
-	UInventorySlotWidget* InventorySlotWidget;
+	UInventoryWidget* InventoryWidgetInstance;
 
 	void RemoveUI();
 

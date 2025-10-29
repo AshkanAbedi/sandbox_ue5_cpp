@@ -3,7 +3,7 @@
 #include "BasePlayerController.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputMappingContext.h"
-#include "InventorySystem/Public/InventorySlotWidget.h"
+#include "InventorySystem/Public/InventoryWidget.h"
 
 DEFINE_LOG_CATEGORY(LogBasePlayerController);
 
@@ -12,12 +12,12 @@ void ABasePlayerController::BeginPlay()
 	Super::BeginPlay();
 	UE_LOG(LogBasePlayerController, Warning, TEXT("BasePlayerController Initiated"));
 
-	if (InventorySlotClass)
+	if (InventoryWidgetClass)
 	{
-		InventorySlotWidget = CreateWidget<UInventorySlotWidget>(this, InventorySlotClass);
-		if (InventorySlotWidget)
+		InventoryWidgetInstance = CreateWidget<UInventoryWidget>(this, InventoryWidgetClass);
+		if (InventoryWidgetInstance)
 		{
-			InventorySlotWidget->AddToViewport();
+			InventoryWidgetInstance->AddToViewport();
 			UE_LOG(LogTemp, Log, TEXT("InventorySlotWidget Added to the Screen"));
 		}
 		else
@@ -43,10 +43,10 @@ void ABasePlayerController::SetupInputComponent()
 
 void ABasePlayerController::RemoveUI()
 {
-	if (InventorySlotWidget)
+	if (InventoryWidgetInstance)
 	{
-		InventorySlotWidget->RemoveFromParent();
-		InventorySlotWidget = nullptr;
+		InventoryWidgetInstance->RemoveFromParent();
+		InventoryWidgetInstance = nullptr;
 		UE_LOG(LogTemp, Log, TEXT("InventorySlotWidget Removed from the Screen"));
 	}
 }
