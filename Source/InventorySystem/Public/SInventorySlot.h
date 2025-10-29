@@ -13,12 +13,11 @@ public:
 	SLATE_END_ARGS()
 
 	void Construct(const FArguments& InArgs, const FSlotData& InSlotData);
-	
-protected:
+
 private:
 	FSlateBrush EmptyBrush;
 	FSlotData SlotData;
-
+	
 	const FSlateBrush* GetItemIconBrush() const;
 	EVisibility GetQuantityTextVisibility() const;
 	FText GetQuantityText() const;

@@ -17,33 +17,39 @@ void SInventorySlot::Construct(const FArguments& InArgs, const FSlotData& InSlot
 	}
 
 	ChildSlot
+	.HAlign(HAlign_Center)
+	.VAlign(VAlign_Center)
 	[
-		// A border for the background color and padding.
-		SNew(SBorder)
-		.BorderImage(FCoreStyle::Get().GetBrush("ToolPanel.GroupBorder")) // A default engine brush
-		.Padding(4.f)
+		SNew(SBox)
+		.WidthOverride(512.f)
+		.HeightOverride(512.f)
 		[
-			SNew(SOverlay) // Overlay allows stacking widgets on top of each other.
+			SNew(SBorder)
+			.BorderImage(FCoreStyle::Get().GetBrush("ToolPanel.GroupBorder")) // A default engine brush
+			.Padding(4.f)
+			[
+				SNew(SOverlay) // Overlay allows stacking widgets on top of each other.
 			
 			// Layer 0: The item icon
-			+ SOverlay::Slot()
-			.HAlign(HAlign_Center)
-			.VAlign(VAlign_Center)
-			[
-				SNew(SImage)
-				.Image(this, &SInventorySlot::GetItemIconBrush)
-			]
+				+ SOverlay::Slot()
+				.HAlign(HAlign_Center)
+				.VAlign(VAlign_Center)
+				[
+					SNew(SImage)
+					.Image(this, &SInventorySlot::GetItemIconBrush)
+				]
 
 			// Layer 1: The quantity text
-			+ SOverlay::Slot()
-			.HAlign(HAlign_Right)
-			.VAlign(VAlign_Bottom)
-			[
-				SNew(STextBlock)
-				.Text(this, &SInventorySlot::GetQuantityText)
-				.Visibility(this, &SInventorySlot::GetQuantityTextVisibility)
-				.Font(FCoreStyle::Get().GetFontStyle("EmbossedText"))
-				.ShadowOffset(FVector2D(1, 1))
+				+ SOverlay::Slot()
+				.HAlign(HAlign_Right)
+				.VAlign(VAlign_Bottom)
+				[
+					SNew(STextBlock)
+					.Text(this, &SInventorySlot::GetQuantityText)
+					.Visibility(this, &SInventorySlot::GetQuantityTextVisibility)
+					.Font(FCoreStyle::Get().GetFontStyle("EmbossedText"))
+					.ShadowOffset(FVector2D(1, 1))
+				]
 			]
 		]
 	];

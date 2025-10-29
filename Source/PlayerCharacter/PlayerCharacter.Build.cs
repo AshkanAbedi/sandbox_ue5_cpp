@@ -15,7 +15,8 @@ public class PlayerCharacter : ModuleRules
                 "InputCore",
                 "EnhancedInput",
                 "UMG",
-                "Slate"
+                "Slate",
+                "InventorySystem"
             }
         );
 

@@ -19,7 +19,8 @@ public class InventorySystem : ModuleRules
                 "CoreUObject",
                 "Engine",
                 "Slate",
-                "SlateCore"
+                "SlateCore",
+                "UMG"
             }
         );
     }
